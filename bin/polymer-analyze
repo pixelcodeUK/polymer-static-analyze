@@ -1,0 +1,64 @@
+#!/usr/bin/env node
+
+var path = require('path'),
+    fs   = require('fs'),
+    lib  = path.join(path.dirname(fs.realpathSync(__filename)), '../lib'),
+    nopt = require('nopt');
+
+
+var help = [
+  'polymer-analyse: Analyse the dependency chain of an element',
+  '',
+  'Usage:',
+  '  polymer-analyse /path/to/polymer.json',
+  '  This command will open the polymer.json file and analyse the shell and fragments',
+  '',
+  'Options:',
+  '  -h|--help: print help message',
+  '  -v|--version: print version number'
+  ].join('\n');
+
+var args = nopt(
+  {
+    help: Boolean,
+    version: Boolean
+  },
+  {
+    'h': ['--help'],
+    'v': ['--version']
+  }
+);
+
+var file = args.argv.remain[0];
+
+function printHelp() {
+  console.log(help);
+}
+
+function printVersion() {
+  var pkg = require(__dirname + '/../package.json');
+  console.log('polymer-analyse:', pkg.version);
+}
+
+if (args.version) {
+  printVersion();
+  process.exit(0);
+}
+
+if (args.help || !file) {
+  printHelp();
+  process.exit(0);
+}
+
+var file = path.resolve(process.cwd(),file);
+require(lib+'/polymer-analyze.js').analyse(file).then(function(analysis) {
+  for(var i = 0;i < analysis.length;i++){
+    console.log('Result for : '+analysis[i].file);
+    console.log(require('util').inspect(analysis[i], true, 3));
+  }
+  process.exit(0);
+}).catch(function(reason) {
+  console.error('Error');
+  console.error(reason);
+  process.exit(1);
+});

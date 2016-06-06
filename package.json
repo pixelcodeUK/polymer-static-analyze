@@ -1,0 +1,25 @@
+{
+  "name": "polymer-static-analysis",
+  "version": "1.0.0",
+  "description": "A tool to statically analyze Polymer projects",
+  "main": "./lib/polymer-analyze",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pixelcodeUK/polymer-static-analyze.git"
+  },
+  "author": "PixelcodeUK",
+  "license": "ISC",
+  "bin": {
+    "polymer": "./bin/polymer-analyze"
+  },
+  "dependencies": {
+    "hydrolysis": "^1.23.3",
+    "nopt": "^3.0.6"
+  },
+  "engines": {
+    "node": ">=5.2.0"
+  }
+}
