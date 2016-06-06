@@ -11,6 +11,7 @@ git clone https://github.com/Polymer/shop.git
 git clone https://github.com/PixelcodeUK/polymer-static-analyze.git
 cd shop
 bower install
+npm install ../polymer-static-analyze/
 node ../polymer-static-analyze/bin/polymer-analyze polymer.json
 ```
 
