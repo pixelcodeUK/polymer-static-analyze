@@ -18,7 +18,7 @@ node ../polymer-static-analyze/bin/polymer-analyze polymer.json
 
 Fragment[0]: src/shop-list.html
 
-```JSON
+```js
 { dependencies:
    [ { file: 'bower_components/polymer/polymer.html',
        refCount: 7,
