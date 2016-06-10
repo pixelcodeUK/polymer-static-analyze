@@ -14,6 +14,7 @@ var help = [
   '  This command will open the polymer.json file and analyse the shell and fragments',
   '',
   'Options:',
+  '  -p|--pushmanifest: generate a push manifest file (one for each fragment) and saves it in the directory of the polymer.json file',
   '  -h|--help: print help message',
   '  -v|--version: print version number'
   ].join('\n');
@@ -21,11 +22,13 @@ var help = [
 var args = nopt(
   {
     help: Boolean,
-    version: Boolean
+    version: Boolean,
+    pushmanifest: Boolean,
   },
   {
-    'h': ['--help'],
-    'v': ['--version']
+    'h' : ['--help'],
+    'v' : ['--version'],
+    'p' : ['--pushmanifest']
   }
 );
 
@@ -51,12 +54,29 @@ if (args.help || !file) {
 }
 
 var file = path.resolve(process.cwd(),file);
-require(lib+'/polymer-analyze.js').analyse(file).then(function(analysis) {
+var pa = require(lib+'/polymer-analyze.js');
+pa.analyse(file).then(function(analysis) {
   for(var i = 0;i < analysis.length;i++){
     console.log('Result for : '+analysis[i].file);
     console.log(require('util').inspect(analysis[i], true, 3));
   }
-  process.exit(0);
+  //Output to standard format
+  if(args.pushmanifest){
+    pa.exportManifest(file,analysis).then(function(manifests){
+      console.log(manifests.length + ' manifests made');
+      process.exit(0);
+    },function(file){
+      console.error('Could not save file: ' + file);
+      process.exit(2);
+    }).catch(function(err){
+      console.error('Error');
+      console.error(err);
+      process.exit(2);
+    });
+  }else{
+    process.exit(0);
+  }
+
 }).catch(function(reason) {
   console.error('Error');
   console.error(reason);

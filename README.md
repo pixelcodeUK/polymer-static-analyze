@@ -65,6 +65,43 @@ The output shows the file name, the number of times it is referenced, the file s
 
 This output shows that the Polymer element is referenced 7 times (for this element/route), at 3 different depths -- and is therefore a good candidate for HTTP 2.0 server push.
 
+##Example 2
+
+You can also produce a [push_manifest.js](https://github.com/GoogleChrome/http2-push-manifest) using the `-p` argument:
+
+```
+git clone https://github.com/Polymer/shop.git
+git clone https://github.com/PixelcodeUK/polymer-static-analyze.git
+cd shop
+bower install
+node ../polymer-static-analyze/bin/polymer-analyze polymer.json -p
+```
+
+This example will output one [push_manifest.js](https://github.com/GoogleChrome/http2-push-manifest) for each fragment (and the shell) and write it in the same directory as the *polymer.json* file.
+
+##Using as a library
+
+```
+var pa = require('./polymer-static-analyze/lib/polymer-analyze.js');
+
+var file = './shop/src/shop-list.html';
+
+pa.analyseFile(file).then(function(analysis) {
+  //analysis returns an array
+  console.log('Result for : '+analysis[0].file);
+  console.log(require('util').inspect(analysis[0], true, 3));
+
+  //Output to standard format
+  pa.exportManifest(file,analysis).then(function(manifests){
+    console.log(manifests[0] + ' : manifest made');
+  },function(file){
+    console.error('Could not save file: ' + file);
+  });
+});
+```
+
+This example analyses a single file (and outputs a [push_manifest.js](https://github.com/GoogleChrome/http2-push-manifest) file).
+
 ##TODO
 * Make NPM module
 * Add cache so the same file is not re-analyzed
