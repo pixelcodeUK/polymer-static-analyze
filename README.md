@@ -79,6 +79,21 @@ node ../polymer-static-analyze/bin/polymer-analyze polymer.json -p
 
 This example will output one [push_manifest.js](https://github.com/GoogleChrome/http2-push-manifest) for each fragment (and the shell) and write it in the same directory as the *polymer.json* file.
 
+##Example 3
+
+You can also produce a [firebase.json](https://firebase.googleblog.com/2016/09/http2-comes-to-firebase-hosting.html) using the `-f` argument:
+
+```
+git clone https://github.com/Polymer/shop.git
+git clone https://github.com/PixelcodeUK/polymer-static-analyze.git
+cd shop
+bower install
+node ../polymer-static-analyze/bin/polymer-analyze polymer.json -f
+```
+
+This example will output one *firebase.json* file, with a *source* for each fragment. You will need to change the *source* to match the routes of your app.
+
+
 ##Using as a library
 
 ```
@@ -97,6 +112,14 @@ pa.analyseFile(file).then(function(analysis) {
   },function(file){
     console.error('Could not save file: ' + file);
   });
+
+  //Output to firebase format
+  pa.exportFirebase(file,analysis).then(function(){
+    console.log('firebase.json saved');
+  },function(err){
+    console.error('Could not save file: firebase.json');
+  });
+
 });
 ```
 

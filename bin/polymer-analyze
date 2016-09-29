@@ -15,6 +15,7 @@ var help = [
   '',
   'Options:',
   '  -p|--pushmanifest: generate a push manifest file (one for each fragment) and saves it in the directory of the polymer.json file',
+  '  -f|--firebase: generate firebase.json file with the dependencies for push',
   '  -h|--help: print help message',
   '  -v|--version: print version number'
   ].join('\n');
@@ -28,7 +29,8 @@ var args = nopt(
   {
     'h' : ['--help'],
     'v' : ['--version'],
-    'p' : ['--pushmanifest']
+    'p' : ['--pushmanifest'],
+    'f' : ['--firebase'],
   }
 );
 
@@ -71,6 +73,14 @@ pa.analyse(file).then(function(analysis) {
     }).catch(function(err){
       console.error('Error');
       console.error(err);
+      process.exit(2);
+    });
+  }else if(args.firebase){
+    pa.exportFirebase(file,analysis).then(function(){
+      console.log('firebase.json saved');
+      process.exit(0);
+    },function(err){
+      console.error('Could not save file: firebase.json');
       process.exit(2);
     });
   }else{
